@@ -12,7 +12,7 @@ public class Mountain {
 		pointsNum = _pointsNum;
 	}
 
-	public void cloudDraw(Graphics g) {
+	public void mountainDraw(Graphics g) {
 		g.fillPolygon(x, y, pointsNum);
 	}
 

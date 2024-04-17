@@ -6,8 +6,8 @@ import java.awt.Dimension;
 
 public class Scenery extends JPanel {
 	Sun sun;
-	Cloud [] cloud = new Cloud[5];
-	long [][] brick = new long[18][10];
+	Cloud[] cloud = new Cloud[5];
+	long[][] brick = new long[18][10];
 	
 	public Scenery() {
 		sun = new Sun(100, 50, 200);
