@@ -1,7 +1,7 @@
 import javax.swing.JFrame;
 
 public class Images {
-		public static void main(String[] args) {
+	public static void main(String[] args) {
 		JFrame frame = new JFrame("Scenery");
 	
 		Scenery sc = new Scenery();

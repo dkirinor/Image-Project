@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Dimension;
 
-public class Scenery extends JPanel {
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+
+public class Scenery extends JPanel implements MouseListener {
 	Sun sun;
 	Cloud[] cloud = new Cloud[5];
 	Mountain mountain;
@@ -13,6 +16,8 @@ public class Scenery extends JPanel {
 	House house;
 	
 	public Scenery() {
+		addMouseListener(this);
+		
 		sun = new Sun(100, 50, 200);
 		
 		for (int i = 0; i < 4; i++) {
@@ -70,6 +75,12 @@ public class Scenery extends JPanel {
 		g.setColor(grass);
 		g.fillRect(0, 950, 1000, 50);
 	}
+	
+	public void mousePressed(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {}
 	
 	double sunI = 0;
 	public void animate() {
