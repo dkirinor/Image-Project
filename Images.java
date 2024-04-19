@@ -14,3 +14,5 @@ public class Images {
 		sc.animate();
 	}
 }
+
+// Version 0.0.01

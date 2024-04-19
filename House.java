@@ -54,4 +54,6 @@ public class House {
 		int[] yRoofPoints = {y + parY, -150 + y + parY, y + parY};
 		g.fillPolygon(xRoofPoints, yRoofPoints, 3);
 	}
-} 
+}
+
+// Version 0.0.01

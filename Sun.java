@@ -27,3 +27,5 @@ public class Sun {
 		size = amount;
 	}
 }
+
+// Version 0.0.01

@@ -130,3 +130,5 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		}
 	}
 }
+
+// Version 0.0.01

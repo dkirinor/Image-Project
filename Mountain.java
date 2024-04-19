@@ -24,4 +24,6 @@ public class Mountain {
 		
 		g.fillPolygon(modX, modY, pointsNum);
 	}
-} 
+}
+
+// Version 0.0.01
