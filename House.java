@@ -53,7 +53,11 @@ public class House {
 		int[] xRoofPoints = {-38 + x + parX, 262 + x + parX, 562 + x + parX};
 		int[] yRoofPoints = {y + parY, -150 + y + parY, y + parY};
 		g.fillPolygon(xRoofPoints, yRoofPoints, 3);
+		
+		Color grass = new Color(135, 210, 150);
+		g.setColor(grass);
+		g.fillRect(-250 + (mouseX - 500) / 20, 950 + (mouseY - 500) / 20, 1500, 300);
 	}
 }
 
-// Version 0.0.01
+// Version 0.0.02

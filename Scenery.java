@@ -9,6 +9,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 
 public class Scenery extends JPanel implements MouseListener, MouseMotionListener {
+	Sky sky;
 	Sun sun;
 	Cloud[] cloud = new Cloud[5];
 	Cloud[] cloud2 = new Cloud[3];
@@ -18,10 +19,13 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 	House house;
 	public int mouseX;
 	public int mouseY;
+	int time = 0; // 0 = day, 1 = sunset, 2 = night, 3 = sunrise, 666 = blood moon
 	
 	public Scenery() {
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		
+		sky = new Sky(1000, 500, 10);
 		
 		sun = new Sun(100, 50, 200);
 		
@@ -52,14 +56,13 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		Color sky = new Color(150, 230, 255);
-		for (int i = 0; i < 500; i += 20) {
-			g.setColor(sky);
-			g.fillRect(0, i, 1000, 20);
-			sky = new Color(150 - i / 10, 230 - i / 10, 255);
-		}
+		if (time == 0) sky.skyDraw(g, 150, 230, 255, 50, 150, 255);
+		if (time == 1 || time == 3) sky.skyDraw(g, 30, 120, 230, 230, 110, 80);
+		if (time == 2) sky.skyDraw(g, 20, 5, 80, 5, 5, 10);
+		if (time == 666) sky.skyDraw(g, 40, 10, 0, 200, 5, 5);
 		
-		sun.sunDraw(g);
+		if (time == 0) sun.sunDraw(g, 0);
+		if (time == 1 || time == 3) sun.sunDraw(g, 150);
 		
 		for (int i = 0; i < 4; i++) {
 			cloud[i].cloudDraw(g, 0.8, mouseX, mouseY, 125);
@@ -83,14 +86,31 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		
 		house.houseDraw(g, mouseX, mouseY, 20);
 		
-		Color grass = new Color(135, 210, 150);
-		g.setColor(grass);
-		g.fillRect(-250 + (mouseX - 500) / 20, 950 + (mouseY - 500) / 20, 1500, 300);
+		Color day = new Color(255, 255, 0, 20);
+		Color setRise = new Color(50, 0, 50, 90);
+		Color night = new Color(0, 0, 0, 180);
+		Color blood = new Color(100, 0, 0, 160);
+		if (time == 0) g.setColor(day);
+		if (time == 1 || time == 3) g.setColor(setRise);
+		if (time == 2) g.setColor(night);
+		if (time == 666) g.setColor(blood);
+		g.fillRect(0, 0, 1000, 1000);
+		
+		Color borders = new Color(238, 238, 238);
+		g.setColor(borders);
+		g.fillRect(1000, 0, 500, 1000);
+		g.fillRect(0, 1000, 1500, 500);
 	}
 	
 	
 	public void mouseClicked(MouseEvent e) {
-		System.out.println("click");
+		// System.out.println("click");
+		
+		if (time == 1 && Math.random() * 10 > 9) time = 666;
+		else if (time == 666) time = 3;
+		else if (time == 3) time = 0;
+		else time++;
+		System.out.println(time);
 	}
 	
 	public void mouseMoved(MouseEvent e) {
@@ -131,4 +151,4 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 	}
 }
 
-// Version 0.0.01
+// Version 0.0.02
