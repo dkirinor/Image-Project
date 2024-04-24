@@ -11,15 +11,18 @@ import java.awt.event.MouseEvent;
 public class Scenery extends JPanel implements MouseListener, MouseMotionListener {
 	Sky sky;
 	Sun sun;
+	Moon moon;
 	Cloud[] cloud = new Cloud[5];
 	Cloud[] cloud2 = new Cloud[3];
 	Mountain mountain;
 	Mountain mountain2;
 	Mountain mountain3;
 	House house;
+	// Particle fire;
 	public int mouseX;
 	public int mouseY;
 	int time = 0; // 0 = day, 1 = sunset, 2 = night, 3 = sunrise, 666 = blood moon
+	// int houseBurnt = 0; // 0 = fine, 1 = burning, 2 = burnt
 	
 	public Scenery() {
 		addMouseListener(this);
@@ -28,6 +31,8 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		sky = new Sky(1000, 500, 10);
 		
 		sun = new Sun(100, 50, 200);
+		
+		moon = new Moon(800, 200);
 		
 		for (int i = 0; i < 4; i++) {
 			cloud[i] = new Cloud(i * 400, (int)(Math.random() * 300));
@@ -47,6 +52,8 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		mountain3 = new Mountain(xPoints3, yPoints3, 11);
 		
 		house = new House(338, 500);
+		
+		// fire = new Particle(500, 500, 200, 200, 2, 2, 
 	}
 	
 	public Dimension getPreferredSize() {
@@ -64,8 +71,10 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		if (time == 0) sun.sunDraw(g, 0);
 		if (time == 1 || time == 3) sun.sunDraw(g, 150);
 		
+		moon.moonDraw(g, time);
+		
 		for (int i = 0; i < 4; i++) {
-			cloud[i].cloudDraw(g, 0.8, mouseX, mouseY, 125);
+			cloud[i].cloudDraw(g, 0.8, mouseX, mouseY, 125, time);
 		}
 		
 		Color mountainCol = new Color(180, 200, 205);
@@ -73,7 +82,7 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		mountain.mountainDraw(g, mouseX, mouseY, 100);
 		
 		for (int i = 0; i < 2; i++) {
-			cloud2[i].cloudDraw(g, 1.2, mouseX, mouseY, 80);
+			cloud2[i].cloudDraw(g, 1.2, mouseX, mouseY, 80, time);
 		}
 		
 		Color mountain2Col = new Color(160, 180, 185);
@@ -84,7 +93,7 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		g.setColor(mountain3Col);
 		mountain3.mountainDraw(g, mouseX, mouseY, 50);
 		
-		house.houseDraw(g, mouseX, mouseY, 20);
+		house.houseDraw(g, mouseX, mouseY, 20, time);
 		
 		Color day = new Color(255, 255, 0, 20);
 		Color setRise = new Color(50, 0, 50, 90);
@@ -106,7 +115,7 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseClicked(MouseEvent e) {
 		// System.out.println("click");
 		
-		if (time == 1 && Math.random() * 10 > 9) time = 666;
+		if (time == 1 && Math.random() * 100 < 5) time = 666;
 		else if (time == 666) time = 3;
 		else if (time == 3) time = 0;
 		else time++;
@@ -151,4 +160,4 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 	}
 }
 
-// Version 0.0.02
+// Version 0.0.03

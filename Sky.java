@@ -18,9 +18,9 @@ public class Sky {
 
         for (int i = 0; i < h / det; i++) {
             double ratio = (double)i / (double)(h / det);
-            int red = (int)(sky1.getRed() * (1 - ratio) + sky2.getRed() * ratio);
-            int green = (int)(sky1.getGreen() * (1 - ratio) + sky2.getGreen() * ratio);
-            int blue = (int)(sky1.getBlue() * (1 - ratio) + sky2.getBlue() * ratio);
+            int red = (int)(red1 * (1 - ratio) + red2 * ratio);
+            int green = (int)(green1 * (1 - ratio) + green2 * ratio);
+            int blue = (int)(blue1 * (1 - ratio) + blue2 * ratio);
 
             Color sky = new Color(red, green, blue);
             g.setColor(sky);
@@ -31,4 +31,4 @@ public class Sky {
     }
 }
 
-// Version 0.0.02
+// Version 0.0.03

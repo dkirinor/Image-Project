@@ -17,9 +17,10 @@ public class House {
 		}
 	}
 
-	public void houseDraw(Graphics g, int mouseX, int mouseY, int amount) {
+	public void houseDraw(Graphics g, int mouseX, int mouseY, int amount, int time) {
 		int parX = (mouseX - 500) / amount;
 		int parY = (mouseY - 500) / amount;
+		
 		
 		Color wall = new Color(245, 235, 210);
 		Color wall2 = new Color(250, 240, 215);
@@ -52,7 +53,7 @@ public class House {
 		g.setColor(roof);
 		int[] xRoofPoints = {-38 + x + parX, 262 + x + parX, 562 + x + parX};
 		int[] yRoofPoints = {y + parY, -150 + y + parY, y + parY};
-		g.fillPolygon(xRoofPoints, yRoofPoints, 3);
+		g.fillPolygon(xRoofPoints, yRoofPoints, 3);;
 		
 		Color grass = new Color(135, 210, 150);
 		g.setColor(grass);
@@ -60,4 +61,4 @@ public class House {
 	}
 }
 
-// Version 0.0.02
+// Version 0.0.03
