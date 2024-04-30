@@ -5,6 +5,8 @@ public class House {
 	private int x;
 	private int y;
 	long[][] brick = new long[18][10];
+	long[][] brickBurning = new long[18][10];
+	long[][] brickBurnt = new long[18][10];
 	
 	public House(int _x, int _y) {
 		x = _x;
@@ -17,13 +19,23 @@ public class House {
 		}
 	}
 
-	public void houseDraw(Graphics g, int mouseX, int mouseY, int amount, int time) {
+	public void houseDraw(Graphics g, int mouseX, int mouseY, int amount, int houseBurnt) {
 		int parX = (mouseX - 500) / amount;
 		int parY = (mouseY - 500) / amount;
 		
+		Color wall;
+		Color wall2;
+		if (houseBurnt == 0) {
+			wall = new Color(245, 235, 210);
+			wall2 = new Color(250, 240, 215);
+		} else if (houseBurnt == 1) {
+			wall = new Color(135, 85, 75);
+			wall2 = new Color(125, 75, 85);
+		} else {
+			wall = new Color(50, 50, 50);
+			wall2 = new Color(45, 45, 45);
+		}
 		
-		Color wall = new Color(245, 235, 210);
-		Color wall2 = new Color(250, 240, 215);
 		int xOffset;
 		for (int yy = y; yy < 450 + y; yy += 25) {
 			xOffset = yy / 25 % 2 * 25;
@@ -37,28 +49,33 @@ public class House {
 			if (xOffset == 0) g.fillRect(x + 500 + parX, yy + parY, 25, 25);
 		}
 		
-		Color doorFrame = new Color(180, 150, 115);
+		Color doorFrame;
+		if (houseBurnt == 0) doorFrame = new Color(180, 150, 115);
+		else doorFrame = new Color(25, 20, 15);
 		g.setColor(doorFrame);
 		g.fillRect(97 + x + parX, 230 + y + parY, 130, 230);
 		
-		Color door = new Color(165, 135, 100);
+		Color door;
+		if (houseBurnt == 0) door = new Color(165, 135, 100);
+		else door = new Color(30, 25, 15);
 		g.setColor(door);
 		g.fillRect(112 + x + parX, 250 + y + parY, 100, 200);
 		
-		Color doorKnob = new Color(220, 220, 210);
+		Color doorKnob;
+		if (houseBurnt == 0) doorKnob = new Color(220, 220, 210);
+		else doorKnob = new Color(50, 50, 50);
 		g.setColor(doorKnob);
 		g.fillOval(187 + x + parX, 350 + y + parY, 15, 15);
 		
-		Color roof = new Color(210, 100, 100);
+		Color roof;
+		if (houseBurnt == 0) roof = new Color(210, 100, 100);
+		else if (houseBurnt == 1) roof = new Color(145, 85, 75);
+		else roof = new Color(50, 0, 0);
 		g.setColor(roof);
 		int[] xRoofPoints = {-38 + x + parX, 262 + x + parX, 562 + x + parX};
 		int[] yRoofPoints = {y + parY, -150 + y + parY, y + parY};
 		g.fillPolygon(xRoofPoints, yRoofPoints, 3);;
-		
-		Color grass = new Color(135, 210, 150);
-		g.setColor(grass);
-		g.fillRect(-250 + (mouseX - 500) / 20, 950 + (mouseY - 500) / 20, 1500, 300);
 	}
 }
 
-// Version 0.0.03
+// Version 0.0.04

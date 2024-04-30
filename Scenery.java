@@ -17,12 +17,22 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 	Mountain mountain;
 	Mountain mountain2;
 	Mountain mountain3;
+	Color mountainCol;
+	Color mountain2Col;
+	Color mountain3Col;
+	Grass grass;
 	House house;
-	// Particle fire;
+	Fire[] fire = new Fire[50];
+	Color day;
+	Color setRise;
+	Color night;
+	Color blood;
+	Color borders;
 	public int mouseX;
 	public int mouseY;
 	int time = 0; // 0 = day, 1 = sunset, 2 = night, 3 = sunrise, 666 = blood moon
-	// int houseBurnt = 0; // 0 = fine, 1 = burning, 2 = burnt
+	int houseBurnt = 0; // 0 = fine, 1 = burning, 2 = burnt
+	int eventWait = 100;
 	
 	public Scenery() {
 		addMouseListener(this);
@@ -41,6 +51,7 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 			cloud2[i] = new Cloud(i * 800 + 200, (int)(Math.random() * 300));
 		}
 		
+		// top left of this mountain is (-100,200) ... or pass in the peak position and dimensions
 		int[] xPoints = {-100, 150, 350, 400, 550, 650, 800, 850, 1100, 1100, 0};
 		int[] yPoints = {350, 250, 300, 350, 200, 250, 350, 300, 400, 1000, 1000};
 		mountain = new Mountain(xPoints, yPoints, 11);
@@ -51,9 +62,24 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		int[] yPoints3 = {600, 550, 600, 650, 500, 650, 550, 600, 650, 1000, 1000};
 		mountain3 = new Mountain(xPoints3, yPoints3, 11);
 		
+		mountainCol = new Color(180, 200, 205);
+		mountain2Col = new Color(160, 180, 185);
+		mountain3Col = new Color(140, 160, 165);
+		
+		grass = new Grass(-250, 950, 1500, 75, 5);
+		
 		house = new House(338, 500);
 		
-		// fire = new Particle(500, 500, 200, 200, 2, 2, 
+		for (int i = 0; i < 49; i++) {
+			fire[i] = new Fire(275, 900, 525, 200, 5, 10);
+		}
+		
+		day = new Color(255, 255, 0, 20);
+		setRise = new Color(50, 0, 50, 90);
+		night = new Color(0, 0, 0, 180);
+		blood = new Color(100, 0, 0, 160);
+		
+		borders = new Color(238, 238, 238);
 	}
 	
 	public Dimension getPreferredSize() {
@@ -77,35 +103,34 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 			cloud[i].cloudDraw(g, 0.8, mouseX, mouseY, 125, time);
 		}
 		
-		Color mountainCol = new Color(180, 200, 205);
-		g.setColor(mountainCol);
-		mountain.mountainDraw(g, mouseX, mouseY, 100);
+		mountain.mountainDraw(g, mouseX, mouseY, 100, mountainCol, time);
 		
 		for (int i = 0; i < 2; i++) {
 			cloud2[i].cloudDraw(g, 1.2, mouseX, mouseY, 80, time);
 		}
 		
-		Color mountain2Col = new Color(160, 180, 185);
-		g.setColor(mountain2Col);
-		mountain2.mountainDraw(g, mouseX, mouseY, 75);
+		mountain2.mountainDraw(g, mouseX, mouseY, 75, mountain2Col, time);
 		
-		Color mountain3Col = new Color(140, 160, 165);
-		g.setColor(mountain3Col);
-		mountain3.mountainDraw(g, mouseX, mouseY, 50);
+		mountain3.mountainDraw(g, mouseX, mouseY, 50, mountain3Col, time);
 		
-		house.houseDraw(g, mouseX, mouseY, 20, time);
+		house.houseDraw(g, mouseX, mouseY, 20, houseBurnt);
 		
-		Color day = new Color(255, 255, 0, 20);
-		Color setRise = new Color(50, 0, 50, 90);
-		Color night = new Color(0, 0, 0, 180);
-		Color blood = new Color(100, 0, 0, 160);
+		if (time == 666) {
+			for (int i = 0; i < 49; i++) {
+				fire[i].fireDraw(g, mouseX, mouseY, 20);
+			}
+		}
+		
+		if (houseBurnt == 0) grass.grassDraw(g, mouseX, mouseY, 20, 165, 220, 145, 135, 210, 150);
+		else if (houseBurnt == 1) grass.grassDraw(g, mouseX, mouseY, 20, 160, 135, 125, 125, 160, 130);
+		else grass.grassDraw(g, mouseX, mouseY, 20, 75, 75, 75, 85, 115, 105);
+		
 		if (time == 0) g.setColor(day);
 		if (time == 1 || time == 3) g.setColor(setRise);
 		if (time == 2) g.setColor(night);
 		if (time == 666) g.setColor(blood);
 		g.fillRect(0, 0, 1000, 1000);
 		
-		Color borders = new Color(238, 238, 238);
 		g.setColor(borders);
 		g.fillRect(1000, 0, 500, 1000);
 		g.fillRect(0, 1000, 1500, 500);
@@ -115,8 +140,16 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseClicked(MouseEvent e) {
 		// System.out.println("click");
 		
-		if (time == 1 && Math.random() * 100 < 5) time = 666;
-		else if (time == 666) time = 3;
+		if (time == 1 && Math.random() * 100 < 5) {
+			time = 666;
+			houseBurnt = (houseBurnt == 0) ? 1 : 2;
+		}
+		else if (time == 666) {
+			if (eventWait <= 0) {
+				time = 3;
+				houseBurnt = 2;
+			}
+		}
 		else if (time == 3) time = 0;
 		else time++;
 		System.out.println(time);
@@ -145,6 +178,9 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 			}
 			// System.out.println("ran");
 			
+			if (time == 666) eventWait--;
+			else eventWait = 100;
+			
 			sun.expand(Math.sin(sunI) * 25 + 325);
 			sunI += 0.01;
 			
@@ -155,9 +191,13 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 				cloud2[i].moveRight(3);
 			}
 			
+			for (int i = 0; i < 49; i++) {
+				fire[i].update();
+			}
+			
 			repaint();
 		}
 	}
 }
 
-// Version 0.0.03
+// Version 0.0.04

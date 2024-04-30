@@ -13,8 +13,8 @@ public class Sky {
     }
 
     public void skyDraw(Graphics g, int red1, int green1, int blue1, int red2, int green2, int blue2) {
-        Color sky1 = new Color(red1, green1, blue1);
-        Color sky2 = new Color(red2, green2, blue2);
+        // Color sky1 = new Color(red1, green1, blue1);
+        // Color sky2 = new Color(red2, green2, blue2);
 
         for (int i = 0; i < h / det; i++) {
             double ratio = (double)i / (double)(h / det);
@@ -31,4 +31,4 @@ public class Sky {
     }
 }
 
-// Version 0.0.03
+// Version 0.0.04

@@ -16,14 +16,20 @@ public class Mountain {
 		modY = new int[pointsNum];
 	}
 
-	public void mountainDraw(Graphics g, int mouseX, int mouseY, int amount) {
+	public void mountainDraw(Graphics g, int mouseX, int mouseY, int amount, Color col, int time) {
 		for (int i = 0; i < pointsNum; i++) {
 			modX[i] = x[i] + (mouseX - 500) / amount;
 			modY[i] = y[i] + (mouseY - 500) / amount;
+			
+			if (time == 666) {
+				modX[i] += Math.round(Math.random() * 500 / amount);
+				modY[i] += Math.round(Math.random() * 500 / amount);
+			}
 		}
 		
+		g.setColor(col);
 		g.fillPolygon(modX, modY, pointsNum);
 	}
 }
 
-// Version 0.0.03
+// Version 0.0.04

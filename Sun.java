@@ -28,4 +28,4 @@ public class Sun {
 	}
 }
 
-// Version 0.0.03
+// Version 0.0.04
