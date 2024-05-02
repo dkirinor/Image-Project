@@ -6,6 +6,7 @@ public class Cloud {
 	private int y;
 	private int modX;
 	private int modY;
+	Color cloud;
 
 	public Cloud(int _x, int _y) {
 		x = _x;
@@ -16,7 +17,7 @@ public class Cloud {
 		modX = x + (mouseX + 500) / amount;
 		modY = y + (mouseY + 500) / amount;
 		
-		Color cloud = new Color(235, 245, 255, 150);
+		cloud = new Color(235, 245, 255, 150);
 		if (time == 0) cloud = new Color(235, 245, 255, 150);	
 		if (time == 1 || time == 3) cloud = new Color(255, 225, 255, 150);	
 		if (time == 2) cloud = new Color(135, 145, 155, 150);	
@@ -36,4 +37,4 @@ public class Cloud {
 	}
 }
 
-// Version 0.0.04
+// Version 0.0.05

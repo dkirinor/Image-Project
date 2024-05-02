@@ -9,11 +9,13 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 
 public class Scenery extends JPanel implements MouseListener, MouseMotionListener {
-	Sky sky;
+	Sky skyDay, skyRiseSet, skyNight;
 	Sun sun;
 	Moon moon;
 	Cloud[] cloud = new Cloud[5];
 	Cloud[] cloud2 = new Cloud[3];
+	Rain[] rain = new Rain[25];
+	Rain[] rain2 = new Rain[25];
 	Mountain mountain;
 	Mountain mountain2;
 	Mountain mountain3;
@@ -31,14 +33,22 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 	public int mouseX;
 	public int mouseY;
 	int time = 0; // 0 = day, 1 = sunset, 2 = night, 3 = sunrise, 666 = blood moon
+	int cycle = 0;
 	int houseBurnt = 0; // 0 = fine, 1 = burning, 2 = burnt
-	int eventWait = 100;
+	int raining = 0; // 0 = none, 1+ = raining
+	long eventTimer = 0;
+	int eventWait = 1200;
+	int changeTime = 0;
+	double sunI = 0;
+	double skyI = 0;
 	
 	public Scenery() {
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		
-		sky = new Sky(1000, 500, 10);
+		skyDay = new Sky(0, 1000, 500, 10);
+		skyRiseSet = new Sky(500, 1000, 500, 10);
+		skyNight = new Sky(1000, 1000, 500, 10);
 		
 		sun = new Sun(100, 50, 200);
 		
@@ -49,6 +59,11 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		}
 		for (int i = 0; i < 2; i++) {
 			cloud2[i] = new Cloud(i * 800 + 200, (int)(Math.random() * 300));
+		}
+		
+		for (int i = 0; i < 24; i++) {
+			rain[i] = new Rain((int)(Math.random() * 1000), i * -35 + 500, 500, 35, 2);
+			rain2[i] = new Rain((int)(Math.random() * 1000), i * -100 + 1000, 1000, 50, 3);
 		}
 		
 		// top left of this mountain is (-100,200) ... or pass in the peak position and dimensions
@@ -71,7 +86,7 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		house = new House(338, 500);
 		
 		for (int i = 0; i < 49; i++) {
-			fire[i] = new Fire(275, 900, 525, 200, 5, 10);
+			fire[i] = new Fire(300, 900, 475, 200, 5, 10);
 		}
 		
 		day = new Color(255, 255, 0, 20);
@@ -89,10 +104,10 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		if (time == 0) sky.skyDraw(g, 150, 230, 255, 50, 150, 255);
-		if (time == 1 || time == 3) sky.skyDraw(g, 30, 120, 230, 230, 110, 80);
-		if (time == 2) sky.skyDraw(g, 20, 5, 80, 5, 5, 10);
-		if (time == 666) sky.skyDraw(g, 40, 10, 0, 200, 5, 5);
+		skyDay.skyDraw(g, 150, 230, 255, 255, 50, 150, 255, 255);
+		skyRiseSet.skyDraw(g, 50, 150, 255, 255, 230, 110, 80, 255);
+		skyNight.skyDraw(g, 20, 5, 80, 255, 5, 5, 10, 255);
+		if (time == 666) skyNight.skyDraw(g, 40, 10, 0, 255, 200, 5, 5, 255);
 		
 		if (time == 0) sun.sunDraw(g, 0);
 		if (time == 1 || time == 3) sun.sunDraw(g, 150);
@@ -100,24 +115,36 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		moon.moonDraw(g, time);
 		
 		for (int i = 0; i < 4; i++) {
-			cloud[i].cloudDraw(g, 0.8, mouseX, mouseY, 125, time);
+			cloud[i].cloudDraw(g, 0.8, mouseX, mouseY, 250, time);
 		}
 		
-		mountain.mountainDraw(g, mouseX, mouseY, 100, mountainCol, time);
+		if (raining >= 1) {
+			for (int i = 0; i < 24; i++) {
+				rain[i].rainDraw(g, mouseX, mouseY, 250, time);
+			}
+		}
+		
+		mountain.mountainDraw(g, mouseX, mouseY, 200, mountainCol, time);
 		
 		for (int i = 0; i < 2; i++) {
-			cloud2[i].cloudDraw(g, 1.2, mouseX, mouseY, 80, time);
+			cloud2[i].cloudDraw(g, 1.2, mouseX, mouseY, 175, time);
 		}
 		
-		mountain2.mountainDraw(g, mouseX, mouseY, 75, mountain2Col, time);
+		mountain2.mountainDraw(g, mouseX, mouseY, 150, mountain2Col, time);
 		
-		mountain3.mountainDraw(g, mouseX, mouseY, 50, mountain3Col, time);
+		mountain3.mountainDraw(g, mouseX, mouseY, 100, mountain3Col, time);
 		
 		house.houseDraw(g, mouseX, mouseY, 20, houseBurnt);
 		
 		if (time == 666) {
 			for (int i = 0; i < 49; i++) {
 				fire[i].fireDraw(g, mouseX, mouseY, 20);
+			}
+		}
+		
+		if (raining >= 1) {
+			for (int i = 0; i < 24; i++) {
+				rain2[i].rainDraw(g, mouseX, mouseY, 20, time);
 			}
 		}
 		
@@ -131,28 +158,49 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 		if (time == 666) g.setColor(blood);
 		g.fillRect(0, 0, 1000, 1000);
 		
-		g.setColor(borders);
-		g.fillRect(1000, 0, 500, 1000);
-		g.fillRect(0, 1000, 1500, 500);
+		// g.setColor(borders);
+		// g.fillRect(1000, 0, 500, 1000);
+		// g.fillRect(0, 1000, 1500, 500);
 	}
 	
-	
+	double temp = 0;
 	public void mouseClicked(MouseEvent e) {
 		// System.out.println("click");
 		
-		if (time == 1 && Math.random() * 100 < 5) {
-			time = 666;
-			houseBurnt = (houseBurnt == 0) ? 1 : 2;
-		}
-		else if (time == 666) {
-			if (eventWait <= 0) {
-				time = 3;
-				houseBurnt = 2;
+		if (System.currentTimeMillis() - eventTimer > eventWait) {
+			if (changeTime == 0) {
+				cycle++;
+				changeTime = 1;
+				
+				if (time == 1 && Math.random() * 100 < ((cycle * 0.01 > 2) ? 2 : cycle * 0.01)) {
+					time = 666;
+					houseBurnt = (houseBurnt == 0) ? 1 : 2;
+					eventTimer = System.currentTimeMillis();
+				}
+				else if (time == 666) {
+					if (System.currentTimeMillis() - eventTimer > eventWait) {
+						time = 3;
+						houseBurnt = 2;
+					}
+				}
+				else if (time == 3) time = 0;
+				else time++;
+				// System.out.println(time);
+				
+				if (raining == 0 && (Math.random() * 100 < 8 || time == 666)) {
+					raining = (int)(Math.random() * 6) + 1;
+				} else if (raining >= 1 && System.currentTimeMillis() - eventTimer > eventWait) raining--;
+				// System.out.println(raining);
+			} else {
+				changeTime = 0;
+				skyI += 158 - (skyI % 158);
+				skyDay.moveSky(skyI / 100);
+				skyRiseSet.moveSky(skyI / 100);
+				skyNight.moveSky(skyI / 100);
 			}
+			
 		}
-		else if (time == 3) time = 0;
-		else time++;
-		System.out.println(time);
+		// System.out.println(cycle / 4);
 	}
 	
 	public void mouseMoved(MouseEvent e) {
@@ -168,7 +216,6 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseExited(MouseEvent e) {}
 	public void mouseDragged(MouseEvent e) {}
 	
-	double sunI = 0;
 	public void animate() {
 		for(;;) {
 			try {
@@ -178,8 +225,16 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 			}
 			// System.out.println("ran");
 			
-			if (time == 666) eventWait--;
-			else eventWait = 100;
+			if (changeTime == 1) {
+				skyDay.moveSky(skyI / 100);
+				skyRiseSet.moveSky(skyI / 100);
+				skyNight.moveSky(skyI / 100);
+				skyI += 2;
+			}
+			if (skyI % 158 == 0) {
+				changeTime = 0;
+			}
+			System.out.println(skyI);
 			
 			sun.expand(Math.sin(sunI) * 25 + 325);
 			sunI += 0.01;
@@ -191,6 +246,13 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 				cloud2[i].moveRight(3);
 			}
 			
+			if (raining >= 1) {
+				for (int i = 0; i < 24; i++) {
+					rain[i].rainDown(15);
+					rain2[i].rainDown(25);
+				}
+			}
+			
 			for (int i = 0; i < 49; i++) {
 				fire[i].update();
 			}
@@ -200,4 +262,4 @@ public class Scenery extends JPanel implements MouseListener, MouseMotionListene
 	}
 }
 
-// Version 0.0.04
+// Version 0.0.05

@@ -7,6 +7,7 @@ public class Grass {
     int w;
     int h;
     double det;
+	Color grass;
 
     public Grass(int _x, int _y, int _w, int _h, double _det) {
         x = _x;
@@ -23,7 +24,7 @@ public class Grass {
             int green = (int)(green1 * (1 - ratio) + green2 * ratio);
             int blue = (int)(blue1 * (1 - ratio) + blue2 * ratio);
 
-            Color grass = new Color(red, green, blue);
+            grass = new Color(red, green, blue);
             g.setColor(grass);
             g.fillRect(x + (mouseX - 500) / amount, y + (int)(i * det) + (mouseY - 500) / amount, w, (int)det);
 
@@ -32,4 +33,4 @@ public class Grass {
     }
 }
 
-// Version 0.0.04
+// Version 0.0.05
