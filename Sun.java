@@ -12,20 +12,24 @@ public class Sun {
 		size = _size;
 	}
 
-	public void sunDraw(Graphics g, int yOffset) {
+	public void sunDraw(Graphics g) {
 		Color sun = new Color(255, 205, 0);	
 		Color sunGlow = new Color(255, 205, 0, 80);	
 		g.setColor(sun);
-		g.fillOval(x, y + yOffset, (int)size, (int)size);
+		g.fillOval(x, y, (int)size, (int)size);
 		g.setColor(sunGlow);
 		for (int i = 0; i < 4; i++) {
-			g.fillOval(x - i * 10, y - i * 10 + yOffset, (int)size + i * 20, (int)size + i * 20);
+			g.fillOval(x - i * 10, y - i * 10, (int)size + i * 20, (int)size + i * 20);
 		}
 	}
 
 	public void expand(double amount) {
 		size = amount;
 	}
+	
+	public void move(double speed) {
+		y += (int)speed;
+	}
 }
 
-// Version 0.0.05
+// Version 0.0.06

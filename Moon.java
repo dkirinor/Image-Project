@@ -28,10 +28,14 @@ public class Moon {
 		
 	}
 
-	public void moonDraw(Graphics g, int time) {
-		if (time == 2) g.drawImage(moonImg, x, y, null);
-		else if (time == 666) g.drawImage(bloodMoonImg, x, y, null);
+	public void moonDraw(Graphics g, int time, int changeTime) {
+		if (time == 666 && changeTime == 0) g.drawImage(bloodMoonImg, x, y, null);
+		else g.drawImage(moonImg, x, y, null);
+	}
+	
+	public void move(double speed) {
+		y += (int)speed;
 	}
 }
 
-// Version 0.0.05
+// Version 0.0.06

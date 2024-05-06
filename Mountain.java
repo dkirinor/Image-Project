@@ -16,12 +16,12 @@ public class Mountain {
 		modY = new int[pointsNum];
 	}
 
-	public void mountainDraw(Graphics g, int mouseX, int mouseY, int amount, Color col, int time) {
+	public void mountainDraw(Graphics g, int mouseX, int mouseY, int amount, Color col, int time, int changeTime) {
 		for (int i = 0; i < pointsNum; i++) {
 			modX[i] = x[i] + (mouseX - 500) / amount;
 			modY[i] = y[i] + (mouseY - 500) / amount;
 			
-			if (time == 666) {
+			if (time == 666 && changeTime == 0) {
 				modX[i] += Math.round(Math.random() * 500 / amount);
 				modY[i] += Math.round(Math.random() * 500 / amount);
 			}
@@ -32,4 +32,4 @@ public class Mountain {
 	}
 }
 
-// Version 0.0.05
+// Version 0.0.06

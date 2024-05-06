@@ -15,4 +15,4 @@ public class Images {
 	}
 }
 
-// Version 0.0.05
+// Version 0.0.06

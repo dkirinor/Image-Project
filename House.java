@@ -26,12 +26,12 @@ public class House {
 		}
 	}
 
-	public void houseDraw(Graphics g, int mouseX, int mouseY, int amount, int houseBurnt) {
+	public void houseDraw(Graphics g, int mouseX, int mouseY, int amount, int houseBurnt, int changeTime) {
 		parX = (mouseX - 500) / amount;
 		parY = (mouseY - 500) / amount;
 		
 		
-		if (houseBurnt == 0) {
+		if (houseBurnt == 0 || (houseBurnt == 1 && changeTime == 1)) {
 			wall = new Color(245, 235, 210);
 			wall2 = new Color(250, 240, 215);
 		} else if (houseBurnt == 1) {
@@ -54,22 +54,22 @@ public class House {
 			if (xOffset == 0) g.fillRect(x + 500 + parX, yy + parY, 25, 25);
 		}
 		
-		if (houseBurnt == 0) doorFrame = new Color(180, 150, 115);
+		if (houseBurnt == 0 || (houseBurnt == 1 && changeTime == 1)) doorFrame = new Color(180, 150, 115);
 		else doorFrame = new Color(25, 20, 15);
 		g.setColor(doorFrame);
 		g.fillRect(97 + x + parX, 230 + y + parY, 130, 230);
 		
-		if (houseBurnt == 0) door = new Color(165, 135, 100);
+		if (houseBurnt == 0 || (houseBurnt == 1 && changeTime == 1)) door = new Color(165, 135, 100);
 		else door = new Color(30, 25, 15);
 		g.setColor(door);
 		g.fillRect(112 + x + parX, 250 + y + parY, 100, 200);
 		
-		if (houseBurnt == 0) doorKnob = new Color(220, 220, 210);
+		if (houseBurnt == 0 || (houseBurnt == 1 && changeTime == 1)) doorKnob = new Color(220, 220, 210);
 		else doorKnob = new Color(50, 50, 50);
 		g.setColor(doorKnob);
 		g.fillOval(187 + x + parX, 350 + y + parY, 15, 15);
 		
-		if (houseBurnt == 0) roof = new Color(210, 100, 100);
+		if (houseBurnt == 0 || (houseBurnt == 1 && changeTime == 1)) roof = new Color(210, 100, 100);
 		else if (houseBurnt == 1) roof = new Color(145, 85, 75);
 		else roof = new Color(50, 0, 0);
 		g.setColor(roof);
@@ -79,4 +79,4 @@ public class House {
 	}
 }
 
-// Version 0.0.05
+// Version 0.0.06

@@ -39,13 +39,16 @@ public class Fire {
 		modX = x + (mouseX + 500) / amount;
 		modY = y + (mouseY + 500) / amount;
 		
-		fireGlowCol = new Color((255 - Math.abs((sy - y) / speed) > 0) ? 255 - Math.abs((sy - y) / speed) : 0, (255 - Math.abs((sy - y) / speed) > 0) ? 255 - Math.abs((sy - y) / speed) : 0, 100, (75 - Math.abs((sy - y) / speed) > 0) ? 75 - (int)Math.abs((sy - y) / speed) : 0);
+		fireGlowCol = new Color((255 - Math.abs((sy - y) / speed) > 0) ? 255 - Math.abs((sy - y) / speed) : 0,
+		(225 - Math.abs((sy - y) / speed) > 0) ? 225 - Math.abs((sy - y) / speed) : 0, 100, 
+		(75 - Math.abs((sy - y) / speed) > 0) ? 75 - (int)Math.abs((sy - y) / speed) : 0);
 		g.setColor(fireGlowCol);
 		for (int i = 2; i < 5; i++) {
 			g.fillOval(modX - 20 * i, modY - 20 * i, size + 40 * i, size + 40 * i);
 		}
 		
-		fireCol = new Color(255, (255 - Math.abs((sy - y) / speed) > 0) ? 255 - Math.abs((sy - y) / speed) : 0, 0, (255 - Math.abs((sy - y) / speed) > 0) ? 255 - (int)Math.abs((sy - y) / speed) : 0);
+		fireCol = new Color(255, (255 - Math.abs((sy - y) / speed) > 0) ? 255 - Math.abs((sy - y) / speed) : 0, 0,
+		(255 - Math.abs((sy - y) / speed) > 0) ? 255 - (int)Math.abs((sy - y) / speed) : 0);
 		fireFlashCol = new Color(255, 255, 255);
 		if (Math.random() * 100 < 15) g.setColor(fireFlashCol);
 		else g.setColor(fireCol);
@@ -54,4 +57,4 @@ public class Fire {
 
 }
 
-// Version 0.0.05
+// Version 0.0.06

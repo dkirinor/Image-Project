@@ -19,11 +19,11 @@ public class Rain {
 		thick = _thick;
 	}
 
-	public void rainDraw(Graphics g, int mouseX, int mouseY, int amount, int time) {
+	public void rainDraw(Graphics g, int mouseX, int mouseY, int amount, int time, int changeTime) {
 		modX = x + (mouseX + 500) / amount;
 		modY = y + (mouseY + 500) / amount;
 		
-		if (time == 666) rain = new Color(255, (int)(Math.random() * 50), (int)(Math.random() * 50), 100);	
+		if (time == 666 && changeTime == 0) rain = new Color(255, (int)(Math.random() * 50), (int)(Math.random() * 50), 100);	
 		else rain = new Color((int)(Math.random() * 50), (int)(Math.random() * 50), (int)(Math.random() * 100) + 150, 100);
 		g.setColor(rain);
 		int[] xPoints = {modX, modX + (int)(size / 2), modX + (int)(size / 2) + thick, modX + thick};
@@ -42,6 +42,10 @@ public class Rain {
 	
 		}
 	}
+	
+	public void rainReset() {
+		y -= 1000;
+	}
 }
 
-// Version 0.0.05
+// Version 0.0.06
